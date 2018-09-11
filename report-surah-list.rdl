@@ -17,33 +17,31 @@
     <DataSet Name="DataSet1">
       <Query>
         <DataSourceName>DataSource1</DataSourceName>
-        <QueryParameters>
-          <QueryParameter Name="">
-            <Value>=Parameters!Language.Value</Value>
-            <rd:UserDefined>true</rd:UserDefined>
-          </QueryParameter>
-        </QueryParameters>
-        <CommandText>SELECT
-  Surah.Surah_No
-  ,Surah.Surah_Name_English
-  ,Surah.Surah_Name_Arabic
-  ,Surah.Surah_Revealed_Location_English
-  ,Surah.Surah_Revealed_Location_Arabic
-  ,Surah.Surah_Quantity_Ayyat
-FROM
-  Surah</CommandText>
-        <rd:DesignerState>
-          <QueryDefinition xmlns="http://schemas.microsoft.com/ReportingServices/QueryDefinition/Relational">
-            <SelectedColumns>
-              <ColumnExpression ColumnOwner="Surah" ColumnName="Surah_No" />
-              <ColumnExpression ColumnOwner="Surah" ColumnName="Surah_Name_English" />
-              <ColumnExpression ColumnOwner="Surah" ColumnName="Surah_Name_Arabic" />
-              <ColumnExpression ColumnOwner="Surah" ColumnName="Surah_Revealed_Location_English" />
-              <ColumnExpression ColumnOwner="Surah" ColumnName="Surah_Revealed_Location_Arabic" />
-              <ColumnExpression ColumnOwner="Surah" ColumnName="Surah_Quantity_Ayyat" />
-            </SelectedColumns>
-          </QueryDefinition>
-        </rd:DesignerState>
+        <CommandText>CREATE TABLE #tmp_tbl
+	(SurahID uniqueidentifier,
+	 Sur_rev_loc nvarchar(MAX))
+	  INSERT INTO #tmp_tbl
+			 ( [SurahID], [Sur_rev_loc] )
+	 SELECT
+		[ID],
+		[Surah_Revealed_Location_English]
+	FROM dbo.Surah;
+
+	UPDATE #tmp_tbl
+	SET Sur_rev_loc = 'Madni'  
+	WHERE Sur_rev_loc = 'Mecca'  
+
+	SELECT
+	  S.Surah_No
+	  ,S.Surah_Name_English
+	  ,S.Surah_Name_Arabic
+	  ,t.Sur_rev_loc
+	  ,S.Surah_Revealed_Location_Arabic
+	  ,S.Surah_Quantity_Ayyat
+	FROM
+	  Surah S
+	LEFT JOIN #tmp_tbl t on t.SurahID=S.Id</CommandText>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
       </Query>
       <Fields>
         <Field Name="Surah_No">
@@ -58,8 +56,8 @@ FROM
           <DataField>Surah_Name_Arabic</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="Surah_Revealed_Location_English">
-          <DataField>Surah_Revealed_Location_English</DataField>
+        <Field Name="Sur_rev_loc">
+          <DataField>Sur_rev_loc</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Surah_Revealed_Location_Arabic">
@@ -112,9 +110,6 @@ FROM
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>0.73958in</Width>
-                </TablixColumn>
-                <TablixColumn>
                   <Width>0.60806in</Width>
                 </TablixColumn>
                 <TablixColumn>
@@ -132,40 +127,8 @@ FROM
               </TablixColumns>
               <TablixRows>
                 <TablixRow>
-                  <Height>0.25in</Height>
+                  <Height>0.20833in</Height>
                   <TablixCells>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox21">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value />
-                                  <Style>
-                                    <FontFamily>Arial</FontFamily>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style />
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox21</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
                     <TablixCell>
                       <CellContents>
                         <Textbox Name="Textbox11">
@@ -240,7 +203,10 @@ FROM
                               <TextRuns>
                                 <TextRun>
                                   <Value>Surah Revealed Location</Value>
-                                  <Style />
+                                  <Style>
+                                    <FontFamily>Arial</FontFamily>
+                                    <FontSize>12pt</FontSize>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style>
@@ -299,40 +265,8 @@ FROM
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
-                  <Height>0.41146in</Height>
+                  <Height>0.25868in</Height>
                   <TablixCells>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox22">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>Surah No</Value>
-                                  <Style>
-                                    <FontFamily>Arial</FontFamily>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style />
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox22</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
                     <TablixCell>
                       <CellContents>
                         <Textbox Name="Textbox1">
@@ -490,40 +424,8 @@ FROM
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
-                  <Height>0.41146in</Height>
+                  <Height>0.25174in</Height>
                   <TablixCells>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Surah_No1">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>=Fields!Surah_No.Value</Value>
-                                  <Style>
-                                    <FontFamily>Arial</FontFamily>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style />
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Surah_No1</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
                     <TablixCell>
                       <CellContents>
                         <Textbox Name="Surah_No">
@@ -534,7 +436,10 @@ FROM
                               <TextRuns>
                                 <TextRun>
                                   <Value>=Fields!Surah_No.Value</Value>
-                                  <Style />
+                                  <Style>
+                                    <FontFamily>Arial</FontFamily>
+                                    <FontSize>12pt</FontSize>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style />
@@ -564,7 +469,10 @@ FROM
                               <TextRuns>
                                 <TextRun>
                                   <Value>=Fields!Surah_Name_English.Value</Value>
-                                  <Style />
+                                  <Style>
+                                    <FontFamily>Arial</FontFamily>
+                                    <FontSize>12pt</FontSize>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style />
@@ -596,6 +504,7 @@ FROM
                                   <Value>=Fields!Surah_Revealed_Location_Arabic.Value</Value>
                                   <Style>
                                     <FontFamily>Arial</FontFamily>
+                                    <FontSize>12pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -608,7 +517,6 @@ FROM
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
-                            <BackgroundColor>=IIf(First(Fields!Surah_Revealed_Location_English.Value) = "Mecca", "DarkViolet","LimeGreen")</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -619,27 +527,30 @@ FROM
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Surah_Revealed_Location_English">
+                        <Textbox Name="Sur_rev_loc">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!Surah_Revealed_Location_English.Value</Value>
-                                  <Style />
+                                  <Value>=Fields!Sur_rev_loc.Value</Value>
+                                  <Style>
+                                    <FontFamily>Arial</FontFamily>
+                                    <FontSize>12pt</FontSize>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style />
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Surah_Revealed_Location_English</rd:DefaultName>
+                          <rd:DefaultName>Sur_rev_loc</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
-                            <BackgroundColor>=IIf(First(Fields!Surah_Revealed_Location_English.Value) = "Mecca", "DarkViolet","LimeGreen")</BackgroundColor>
+                            <BackgroundColor>=IIf(First(Fields!Sur_rev_loc.Value) = "Madni","LightGrey","LimeGreen")</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -660,6 +571,7 @@ FROM
                                   <Value>=Fields!Surah_Quantity_Ayyat.Value</Value>
                                   <Style>
                                     <FontFamily>Arial</FontFamily>
+                                    <FontSize>12pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -683,43 +595,11 @@ FROM
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
-                  <Height>0.25in</Height>
+                  <Height>0.1875in</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox24">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>="Total Surah:" &amp;  Count(Fields!Surah_No.Value)</Value>
-                                  <Style>
-                                    <FontFamily>Arial</FontFamily>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style />
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox24</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox16">
+                        <Textbox Name="Textbox4">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -729,13 +609,14 @@ FROM
                                   <Value />
                                   <Style>
                                     <FontFamily>Arial</FontFamily>
+                                    <FontSize>12pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style />
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox16</rd:DefaultName>
+                          <rd:DefaultName>Textbox4</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -805,7 +686,6 @@ FROM
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
-                            <BackgroundColor>=IIf(First(Fields!Surah_Revealed_Location_English.Value) = "Mecca", "DarkViolet","LimeGreen")</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -838,7 +718,6 @@ FROM
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
-                            <BackgroundColor>=IIf(First(Fields!Surah_Revealed_Location_English.Value) = "Mecca", "DarkViolet","LimeGreen")</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -849,14 +728,14 @@ FROM
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Surah_Quantity_Ayyat1">
+                        <Textbox Name="Textbox2">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>="Total Ayah:" &amp;  Sum(Fields!Surah_Quantity_Ayyat.Value)</Value>
+                                  <Value />
                                   <Style>
                                     <FontFamily>Arial</FontFamily>
                                   </Style>
@@ -865,7 +744,7 @@ FROM
                               <Style />
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Surah_Quantity_Ayyat1</rd:DefaultName>
+                          <rd:DefaultName>Textbox2</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -887,11 +766,6 @@ FROM
               <TablixMembers>
                 <TablixMember />
                 <TablixMember />
-                <TablixMember>
-                  <Visibility>
-                    <Hidden>=IIF(Parameters!Language.Value="English",True,False)</Hidden>
-                  </Visibility>
-                </TablixMember>
                 <TablixMember />
                 <TablixMember />
                 <TablixMember />
@@ -913,11 +787,20 @@ FROM
                 </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
+            <RepeatColumnHeaders>true</RepeatColumnHeaders>
+            <RepeatRowHeaders>true</RepeatRowHeaders>
+            <FixedColumnHeaders>true</FixedColumnHeaders>
+            <FixedRowHeaders>true</FixedRowHeaders>
             <DataSetName>DataSet1</DataSetName>
-            <Top>0.74875in</Top>
-            <Left>0.33208in</Left>
-            <Height>1.32292in</Height>
-            <Width>6.04292in</Width>
+            <SortExpressions>
+              <SortExpression>
+                <Value>=Fields!Surah_No.Value</Value>
+              </SortExpression>
+            </SortExpressions>
+            <Top>0.76611in</Top>
+            <Left>0.19665in</Left>
+            <Height>0.90625in</Height>
+            <Width>5.30335in</Width>
             <ZIndex>1</ZIndex>
             <Style>
               <Border>
@@ -926,7 +809,7 @@ FROM
             </Style>
           </Tablix>
         </ReportItems>
-        <Height>2.07167in</Height>
+        <Height>3.41542in</Height>
         <Style>
           <Border>
             <Style>None</Style>
@@ -936,7 +819,7 @@ FROM
       <Width>6.97917in</Width>
       <Page>
         <PageFooter>
-          <Height>0.45in</Height>
+          <Height>0.64583in</Height>
           <PrintOnFirstPage>true</PrintOnFirstPage>
           <PrintOnLastPage>true</PrintOnLastPage>
           <ReportItems>
@@ -971,6 +854,37 @@ FROM
                 <PaddingBottom>2pt</PaddingBottom>
               </Style>
             </Textbox>
+            <Textbox Name="PageNumber">
+              <CanGrow>true</CanGrow>
+              <CanShrink>true</CanShrink>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>=Globals!PageNumber</Value>
+                      <Style />
+                    </TextRun>
+                  </TextRuns>
+                  <Style />
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>PageNumber</rd:DefaultName>
+              <Top>0.2in</Top>
+              <Left>0.69667in</Left>
+              <Height>0.25in</Height>
+              <Width>1in</Width>
+              <ZIndex>1</ZIndex>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
           </ReportItems>
           <Style>
             <Border>
@@ -988,35 +902,10 @@ FROM
       </Page>
     </ReportSection>
   </ReportSections>
-  <ReportParameters>
-    <ReportParameter Name="Language">
-      <DataType>String</DataType>
-      <Prompt>Select Language</Prompt>
-      <ValidValues>
-        <ParameterValues>
-          <ParameterValue>
-            <Value>English</Value>
-            <Label>English</Label>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>Arabic</Value>
-            <Label>Arabic</Label>
-          </ParameterValue>
-        </ParameterValues>
-      </ValidValues>
-    </ReportParameter>
-  </ReportParameters>
   <ReportParametersLayout>
     <GridLayoutDefinition>
       <NumberOfColumns>4</NumberOfColumns>
       <NumberOfRows>2</NumberOfRows>
-      <CellDefinitions>
-        <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>0</RowIndex>
-          <ParameterName>Language</ParameterName>
-        </CellDefinition>
-      </CellDefinitions>
     </GridLayoutDefinition>
   </ReportParametersLayout>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
